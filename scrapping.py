@@ -4,69 +4,50 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from bs4 import BeautifulSoup
 from time import sleep
 import pandas as pd
 
 
 df = pd.read_excel('Klinikliste.xlsx')
 
+driver = webdriver.Chrome(executable_path="/Applications/chromedriver")
 
-driver = webdriver.Chrome("/Applications/chromedriver")
 
-namen = []
-adressen = []
-sternen = []
-alle_daten = []
-
-def scrapping(klinik_url):
-
-    driver.get(klinik_url)
+def scrap_daten(url):
+    driver.get(url)
     driver.maximize_window()
 
     ''' Exit from Google's Agree verification '''
     try:
-        WebDriverWait(driver, 10).until(
+        WebDriverWait(driver, 2).until(
             EC.frame_to_be_available_and_switch_to_it((By.XPATH, "//iframe")))
-        agree = WebDriverWait(driver, 10).until(EC.element_to_be_clickable(
+        agree = WebDriverWait(driver, 5).until(EC.element_to_be_clickable(
             (By.XPATH, '//*[@id="introAgreeButton"]/span/span')))
         agree.click()
     except:
-        print('-----')
-
-    sleep(5)
-
-    try:
-        Name = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located(
-                (By.XPATH, '//*[@id="pane"]/div/div[1]/div/div/div[2]/div[1]/div[1]/div[1]/h1/span[1]'))
-
-        )
-        print(Name.text)
-        Name = Name.text
-
-        sleep(3)
-
-        Adresse = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(
-                (By.CSS_SELECTOR, "div.ugiz4pqJLAG__primary-text.gm2-body-2")))
-        print(Adresse.text)
-        Adresse = Adresse.text
-    except:
-        print('Quiting Point 2')
-        driver.quit()
+        pass
 
     sleep(3)
-    try:
-        Stern = WebDriverWait(driver, 10).until(
-            EC.visibility_of_element_located(
-                (By.CSS_SELECTOR, "span.section-star-display"))
 
-        )
-        print(Stern.text)
-        Stern = Stern.text
-    except:
-        print('Quiting Point 4')
-        driver.quit()
+    source = driver.page_source
+    soup = BeautifulSoup(source, 'lxml')
+    name = soup.find(
+        'div', {'class': 'section-hero-header-title-top-container'})
+    name = name.h1.text.strip()
+    # print(name)
+    stern = soup.find(
+        'span', {'class': 'section-star-display'})
+    stern = stern.text.strip()
+    # print(stern)
+    kommantare_zahl = soup.find(
+        'button', {'class': 'widget-pane-link'})
+    kommantare_zahl = int(kommantare_zahl.text.strip().split()[0])
+    # print(kommantare_zahl)
+    adresse = soup.find(
+        'div', {'class': 'ugiz4pqJLAG__primary-text gm2-body-2'})
+    adresse = adresse.text.strip()
+
     try:
         Kommentare = WebDriverWait(driver, 10).until(
             EC.visibility_of_element_located(
@@ -78,16 +59,15 @@ def scrapping(klinik_url):
         print('Quiting Point 3')
         driver.quit()
 
+    div_num = 1
+    schleife = 0
+    kliniks = []
+
     sleep(5)
 
-    Komment = True
-    div_num = 1
-    komment = []
-    comment_date = []
-    likes = []
-    finish = 0
-
     while True:
+
+        schleife += 1
 
         scrollable_div = driver.find_element_by_css_selector(
             'div.section-layout.section-scrollbox.scrollable-y.scrollable-show'
@@ -96,73 +76,95 @@ def scrapping(klinik_url):
             'arguments[0].scrollTop = arguments[0].scrollHeight',
             scrollable_div
         )
-        sleep(5)
+
+        sleep(1)
+
+        source = driver.page_source
+        soup = BeautifulSoup(source, 'lxml')
+
+        komments = soup.find_all(
+            'div', {'class': 'section-review ripple-container gm2-body-2'})  #  section-review-content
+
+        if len(komments) >= kommantare_zahl or schleife > 50:
+            break
+        else:
+            continue
+    sleep(5)
+
+    for div_num in range(1, kommantare_zahl * 3, 3):
+
         try:
-            Click_More = WebDriverWait(driver, 10).until(
+            Click_More = WebDriverWait(driver, 2).until(
                 EC.presence_of_element_located(
                     (By.XPATH, f"/html/body/jsl/div[3]/div[9]/div[8]/div/div[1]/div/div/div[3]/div[9]/div[{div_num}]/div/div[3]/div[3]/jsl/button"))
             )
             Click_More.click()
         except:
-            print(" --- ")
+            pass
+
+    sleep(10)
+    source = driver.page_source
+    soups = BeautifulSoup(source, 'lxml')
+
+    komments = soups.find_all(
+        'div', {'class': 'section-review ripple-container gm2-body-2'})
+
+    for komment in komments:
+
+        datum = komment.find(
+            'span', {'class': 'section-review-publish-date'})
+
+        datum = datum.text.strip()
+        # print(datum)
+
+        komment_stern = komment.find(
+            'span', {'class': 'section-review-stars'})
+        komment_stern = int(komment_stern["aria-label"].strip().split()[0])
+        # print("kommen stern ist : ", komment_stern)
+
         try:
-            Komment = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located(
-                    (By.XPATH, f"/html/body/jsl/div[3]/div[9]/div[8]/div/div[1]/div/div/div[3]/div[9]/div[{div_num}]/div/div[3]/div[3]/div[2]/span[2]"))
-            )
-            komment.append(Komment.text)
-            print(Komment.text)
-            sleep(3)
-            Comment_Date = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located(
-                    (By.XPATH, f"/html/body/jsl/div[3]/div[9]/div[8]/div/div[1]/div/div/div[3]/div[9]/div[{div_num}]/div/div[3]/div[3]/div[1]/span[3]"))
-            )
-            comment_date.append(Comment_Date)
-            print(Comment_Date.text)
-            try:
-                like = WebDriverWait(driver, 10).until(
-                    EC.presence_of_element_located(
-                        (By.XPATH, f"/html/body/jsl/div[3]/div[9]/div[8]/div/div[1]/div/div/div[3]/div[9]/div[{div_num}]/div/div[3]/div[3]/div[7]/button[2]/span/span[2]"))
-                )
-
-                likes.append(like.text)
-                print(like.text)
-            except:
-                likes.append(0)
-                print("Gibt keine likes")
+            komment_text = komment.find(
+                'span', {'class': 'section-review-text'}).text.strip()
+            # print(komment_text)
         except:
-            print('Comment_Date could not be taken')
-            finish += 1
-            if finish == 5:
-                break
-            else:
-                continue
-        sleep(3)
-        div_num += 3
+            komment_text = ' '
 
-    einzelne = {
-        'Namen': Name,
-        'Adresse': Adresse,
-        'Sterne': Stern,
-        'Kommentare': komment,
-        'Datum': comment_date,
-        'Likes': likes
-    }
-    return einzelne
+        try:
+            like = komment.find(
+                'span', {'class': 'section-review-thumbs-up-count'}).text.strip()
+        except:
+            like = 0
+
+        einzelne = {
+            'Name': name,
+            'AVG - Sterne': stern,
+            'Zahl der Kommentaren': kommantare_zahl,
+            'Adresse': adresse,
+            'Sterne': komment_stern,
+            'Kommentare': komment_text,
+            'Datum': datum,
+            'Likes': like
+        }
+
+        kliniks.append(einzelne)
+
+    print(kliniks)
+
+    return kliniks, name
 
 
 def get_data(links):
-    for link in links:
-        daten_einzelne = scrapping(link)
-        alle_daten.append(daten_einzelne)
+    kliniks = links.to_list()
+    while len(kliniks) > 0:
+        try:
+            einzelne_klinik, names = scrap_daten(kliniks[0])
+            data_frame = pd.DataFrame(einzelne_klinik)
+            data_frame.to_csv(f'csvs/{names}.csv', index=False)
+            del kliniks[0]
+        except:
+            continue
+    print('daten wurden bekommen')
+    quit()
 
-    return alle_daten
 
-
-def make_csv():
-    daten = get_data(df['Link Google Maps'])
-    data_frame = pd.DataFrame(daten)
-    daten.to_csv('bewertungen_google_maps.csv')
-
-
-make_csv()
+get_data(df['Link Google Maps'])
