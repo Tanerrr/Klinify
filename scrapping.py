@@ -44,9 +44,13 @@ def scrap_daten(url):
         'button', {'class': 'widget-pane-link'})
     kommantare_zahl = int(kommantare_zahl.text.strip().split()[0])
     # print(kommantare_zahl)
-    adresse = soup.find(
+    adresse = soup.find_all(
         'div', {'class': 'ugiz4pqJLAG__primary-text gm2-body-2'})
-    adresse = adresse.text.strip()
+
+    if adresse[0].text.strip().split()[0] == 'COVID-19':
+        adresse = adresse[1].text.strip()
+    else:
+        adresse = adresse[0].text.strip()
 
     try:
         Kommentare = WebDriverWait(driver, 10).until(
@@ -77,7 +81,7 @@ def scrap_daten(url):
             scrollable_div
         )
 
-        sleep(1)
+        sleep(3)
 
         source = driver.page_source
         soup = BeautifulSoup(source, 'lxml')
@@ -85,7 +89,7 @@ def scrap_daten(url):
         komments = soup.find_all(
             'div', {'class': 'section-review ripple-container gm2-body-2'})  #  section-review-content
 
-        if len(komments) >= kommantare_zahl or schleife > 50:
+        if len(komments) >= kommantare_zahl or schleife > 70:
             break
         else:
             continue
@@ -160,8 +164,9 @@ def get_data(links):
             einzelne_klinik, names = scrap_daten(kliniks[0])
             data_frame = pd.DataFrame(einzelne_klinik)
             data_frame.to_csv(f'csvs/{names}.csv', index=False)
+            # wenn die Daten Erfolgreich bekommen wurde, geht nachste Klinik weiter.
             del kliniks[0]
-        except:
+        except:  #  wenn die Daten der Klinik nicht bekommen wurde, werde es wieder versuchen.
             continue
     print('daten wurden bekommen')
     quit()
