@@ -9,23 +9,14 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 driver = webdriver.Chrome("/Users/MEHMET/Downloads/chromedriver")
 
-klinikliste = ["https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-augenklinik-dr-hoffmann-braunschweig/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-krankenhaus-marienstift-braunschweig/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-kliniken-herzogin-elisabeth-braunschweig/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-krankenhaus-goettingen/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-krankenhaus-tiefenbrunn-rosdorf/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-krankenhaus-friederikenstift-hannover/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-annastift-hannover/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-drk-clementinenhaus-hannover/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-sophien-klinik-hannover/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-krankenhaus-grossburgwedel/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-krankenhaus-lehrte/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-krankenhaus-lindenbrunn-coppenbruegge/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-krankenhaus-hameln/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-kreis-und-stadtkrankenhaus-alfeld/bewertungen?allbew#more",
-"https://www.klinikbewertungen.de/klinik-forum/erfahrung-mit-krankenhaus-hildesheim/bewertungen?allbew#more"]
+df = pd.read_excel("Klinikliste_first15.xlsx", sheet_name="Tabelle1")
 
+klinikserie = df["Link Klinikbewertungen"]
 
+klinikliste = klinikserie.tolist()
+
+print(klinikserie)
+print(klinikliste)
 
 names=[] #List to name of the hospitals
 ratings=[] #List to rating of the product
@@ -61,15 +52,8 @@ for x in klinikliste:
         reviews.append(review)
         rating = i.find("section", attrs={"class":"rating"}).text.split("\n")
         ratings.append(rating)
-    # for i in soup.find_all("section", attrs={"class":"rating"}):
-    #     rating = i.find("img")
-    #     ratings.append(rating["class"])
+
 
 df = pd.DataFrame({'Name':names, 'Department':departments, 'Date':dates, 'Title':titles, 'Review':reviews, 'Rating':ratings}) 
-df.to_csv('kliniks_reviews9.csv', index=False, encoding='utf-8')
+df.to_csv('kliniks_reviews10.csv', index=False, encoding='utf-8')
 
-# print(names)
-# print(dates)
-# print(ratings)
-# print(titles)
-# print(reviews)
