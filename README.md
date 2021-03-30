@@ -1,6 +1,6 @@
-# ** Klinify **
+# **Klinify**
 
-This project has been prepared as a graduation project within the scope of Refugeeks project. Refugeeks is a training program organized by Hochschule Hannover, which aims to train IT experts in the field of Web technologies and Data science after 9 months of theoretical training and 3 months of practical training. Within the scope of the program, between June 2020 - March 2021, lectures were given by university lecturers and professional staff who are experts in their field in Hochschule Hanover. This project, which is given below as a graduation project at the end of the training, has been realized.
+This project has been prepared as a graduation project within the scope of Refugeeks project. Refugeeks is a training program organized by Hochschule Hannover, which aims to train participants in the field of Web technologies and Data science after 9 months of theoretical training and 3 months of practical training as IT experts . Within the scope of the program, between June 2020 - March 2021, lectures were given by university lecturers and professional staff who are experts in their field in Hochschule Hanover. This project, which is given below as a graduation project at the end of the training, has been realized.
 
 ## **Goal**
 The Klinify project is a project of collecting data from the internet, re-scoring by using machine learning methods, and presenting the new data obtained to the user via a web service. The relevant data are taken from the websites googlemaps and Klinikbewertungen.de.
