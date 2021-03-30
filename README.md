@@ -1,5 +1,6 @@
 # **Klinify**
 
+## **General**
 This project has been prepared as a graduation project within the scope of Refugeeks project. Refugeeks is a training program organized by Hochschule Hannover, which aims to train participants in the field of Web technologies and Data science after 9 months of theoretical training and 3 months of practical training as IT experts . Within the scope of the program, between June 2020 - March 2021, lectures were given by university lecturers and professional staff who are experts in their field in Hochschule Hanover. This project, which is given below as a graduation project at the end of the training, has been realized.
 
 ## **Goal**
