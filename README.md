@@ -14,12 +14,17 @@ Within the scope of the Klinify project, it was aimed to re-evaluate the rating 
 ## **Technology and Method**
 
 1. Scraping of Data
+
 At the first web scraping method has been used to obtain the data. This data was taken with Selenium, BeautifulSoup, and Google Chrome web driver.
+
 2. Data Science Phase
+
 Second step the obtained data was cleaned using Python, Jupyter notebook, and  Pandas, Numpy libraries, and converted to JSON format for inserting to the database.
 Sentiment analysis is used as machine learning. In order to better analyze the German comments, the data with the textblob library, which is a special library for german, were analyzed. In order to obtain a project-specific hospital score from the scraped data, scores were clustered by including the number of comments. 
 Appropriate calculations were made on the new data obtained, and the data was brought to the latest state to be presented on the web application and converted into JSON format.
+
 3. Web Technology Phase
+
 The first step as the web technology phase, draft drawings were made for the web application, the relevant logo was designed and the information to be given to the user was determined. Then, with Google Firebase technology as a backend, the data was stored in the cloud (Cloudfirestore) and transferred to the github.io web application as JSON data. It has been deployed as github pages using React, the javascript library, as the frontent.
 
 
