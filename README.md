@@ -2,7 +2,7 @@
 
 ## **Introduction**
 
-This project has been realized as a graduation project within the scope of Refugeeks project. Refugeeks is a training program organized by Hochschule Hannover, which aims to train IT experts in the field of Web technologies and Data science as a result of 9 months of theoretical training including a graduation project. Within the scope of the program, the lectures were given by professors and professional staff who are experts in their field between June 2020 - March 2021 in Hochschule hannover.
+This project has been realized as a graduation project within the scope of Refugeeks project. Refugeeks is a training program organized by Hochschule Hannover, which aims to train IT experts in the field of Web technologies and Data science as a result of 9 months of theoretical training including a graduation project. Within the scope of the program, the lectures were given by professors and professional staff who are experts in their field between June 2020 - March 2021 in Hochschule Hannover.
 
 This project, Klinify,  the information of which is given below as a graduation project at the end of the training, has been realized. Klinify was completed in 4 weeks as 2 sprints, each lasting 2 weeks. During the project, scrum methodology and philosophy were applied, and daily review, sprint review, sprint retro-respective meetings were held. Git, Github, Jira and Scrum were used in project management.
 
